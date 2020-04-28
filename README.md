@@ -1,5 +1,5 @@
 # Setup a EKS Cluster with Kong Ingress Controller
-Learning from setting up an AWS EKS Cluster with Kong Ingress Controller
+Learnings from setting up an AWS EKS Cluster with Kong Ingress Controller
 
 ## Prereq.
 
