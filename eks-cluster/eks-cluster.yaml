@@ -2,11 +2,11 @@ apiVersion: eksctl.io/v1alpha5
 kind: ClusterConfig
 
 metadata:
-  name: eks-test-cluster
+  name: spot-autoscale
   region: eu-west-1
 
 nodeGroups:
-  - name: scale-spot
+  - name: ng-spot-autoscale
     desiredCapacity: 1
     maxSize: 10
     instancesDistribution:
@@ -18,9 +18,8 @@ nodeGroups:
       withAddonPolicies:
         autoScaler: true
     labels:
-      nodegroup-type: stateless-workload
       instance-type: spot
-    ssh: 
+    ssh:
       publicKeyName: eks-tutorial-keypair
 
 availabilityZones: ["eu-west-1a", "eu-west-1b", "eu-west-1c"]
