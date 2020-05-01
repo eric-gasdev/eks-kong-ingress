@@ -48,3 +48,5 @@ Clean up:
 ```bash
 kubectl delete -f test-fargate-deployment.yaml
 ```
+
+[Move on to the gRPC example](../grpc-example/README.md)
