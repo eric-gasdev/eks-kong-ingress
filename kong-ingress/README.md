@@ -40,4 +40,4 @@ Server: kong/1.1.2
 {"message":"no Route matched with those values"}
 ```
 
-[Move on to Fargate Support](../fargate-support/README.md)
+[Move on to Kong Ingress SSL Termination](../cert-manager/README.md)

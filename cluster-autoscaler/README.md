@@ -16,9 +16,11 @@ kubectl -n kube-system annotate deployment.apps/cluster-autoscaler cluster-autos
 
 ## Update autoscaler to match cluster and version 
 
-Check the Kubernetes version on the AWS EKS Console: Kubernetes 1.14
+Check the Kubernetes version on the AWS EKS Console: e.g. Kubernetes 1.15
+
 Get the autoscaler image version:  
-    - open https://github.com/kubernetes/autoscaler/releases and get the latest release version matching your Kubernetes version: 1.14.8
+* open https://github.com/kubernetes/autoscaler/releases and get the latest release version matching your Kubernetes version
+* E.g. 1.15.6 -> eu.gcr.io/k8s-artifacts-prod/autoscaling/cluster-autoscaler:v1.15.6
 
 edit deployment and set your EKS cluster name:
 
@@ -26,7 +28,7 @@ edit deployment and set your EKS cluster name:
 kubectl -n kube-system edit deployment.apps/cluster-autoscaler
 ```
 Update the config using vi commands:
-* ```image=k8s.gcr.io/cluster-autoscaler:1.14.8```  
+* ```eu.gcr.io/k8s-artifacts-prod/autoscaling/cluster-autoscaler:v1.15.6```  
 * ```- --node-group-auto-discovery=asg:tag=k8s.io/cluster-autoscaler/enabled,k8s.io/cluster-autoscaler/spot-autoscale```
 
 ## Verify autoscaler deployment
@@ -51,7 +53,7 @@ kubectl apply -f test-autoscaler-deployment.yaml
 
 Check pods:
 ```bash
-kubectl get po
+kubectl get po -o wide
 ```
 
 We see we have 1 pod running as expected
@@ -71,15 +73,22 @@ Scale the number of replicas to 30:
 kubectl scale --replicas=30 deployment/test-autoscaler
 ```
 
+!!! Note this takes some time, so you will see pods in Pending and other states !!!
 Check pods:
 ```bash
-kubectl get po
+$ kubectl get po -o wide
+NAME                               READY   STATUS    RESTARTS   AGE     IP               NODE                                           NOMINATED NODE   READINESS GATES
+test-autoscaler-797bb4dc87-4m5wx   1/1     Running   0          3m21s   xxx.xxx.xx.xx    ip-xxx-xxx-x-xx.eu-west-1.compute.internal     <none>           <none>
+test-autoscaler-797bb4dc87-4tmrf   1/1     Running   0          2m16s   xxx.xxx.xx.xx    ip-xxx-xxx-x-xx.eu-west-1.compute.internal     <none>           <none>
+test-autoscaler-797bb4dc87-7mrb6   1/1     Running   0          2m16s   xxx.xxx.xx.xx    ip-xxx-xxx-x-xx.eu-west-1.compute.internal     <none>           <none>
+test-autoscaler-797bb4dc87-7v2lc   1/1     Running   0          2m16s   xxx.xxx.xx.xx    ip-xxx-xxx-x-xx.eu-west-1.compute.internal     <none>           <none>
+test-autoscaler-797bb4dc87-879dl   1/1     Running   0          2m16s   xxx.xxx.xx.xx    ip-xxx-xxx-x-xx.eu-west-1.compute.internal     <none>           <none>
+test-autoscaler-797bb4dc87-9g75s   1/1     Running   0          2m16s   xxx.xxx.xx.xx    ip-xxx-xxx-x-xx.eu-west-1.compute.internal     <none>           <none>
+test-autoscaler-797bb4dc87-9wf5p   1/1     Running   0          2m16s   xxx.xxx.xx.xx    ip-xxx-xxx-x-xx.eu-west-1.compute.internal     <none>           <none>
+test-autoscaler-797bb4dc87-9x4b5   1/1     Running   0          2m16s   xxx.xxx.xx.xx    ip-xxx-xxx-x-xx.eu-west-1.compute.internal     <none>           <none>
+...
 ```
-
 We see we have 30 pod running as expected. 
-
-!!! Note this takes some time, so you will see pods in Pending and other states !!!
-
 
 Check Spot Nodes if all pod are running:
 ```bash
@@ -102,7 +111,7 @@ kubectl scale --replicas=1 deployment/test-autoscaler
 
 Check pods:
 ```bash
-kubectl get po
+kubectl get po -o wide
 ```
 
 We see we have 1 pod running as expected. 
@@ -120,6 +129,7 @@ We can verify this in the logs:
 ```bash
 kubectl -n kube-system logs deployment.apps/cluster-autoscaler | grep -A5 "removing node"
 ```
+//TODO: verify correct grep statement: changed since 1.15
 
 ### Clean up the Deployment
 First list all resources:
@@ -129,7 +139,7 @@ kubectl get all
 
 There you see the deployment name and we can delete it:
 ```bash
-kubectl delete deployment/test-autoscaler
+kubectl delete -f test-autoscaler-deployment.yaml
 ```
 
 We can verify that the deployment and all his pods are deleted:

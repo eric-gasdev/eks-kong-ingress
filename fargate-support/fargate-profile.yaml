@@ -4,6 +4,7 @@ kind: ClusterConfig
 metadata:
   name: spot-autoscale
   region: eu-west-1
+  version: "1.15"
 
 fargateProfiles:
   - name: fargate-default

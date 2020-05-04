@@ -25,10 +25,12 @@ eksctl create cluster -f eks-cluster.yaml
 Sets up an EKS cluster:
 - name: spot-autoscale
 - region: eu-west-1
+- k8s version: 1.15
 - 1 nodegroup:
     - name: ng-spot-autoscale
     - spot instances
-    - autoscale
+    - autoscale profile
+    - cert manager profile
     - 3 AZ: eu-west-1a, eu-west-1b, eu-west-1c
         
 !!! Uses spot instance for cost saving, this needs to change in PRD !!!

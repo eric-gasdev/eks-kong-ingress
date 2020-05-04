@@ -1,0 +1,53 @@
+apiVersion: extensions/v1beta1
+kind: Deployment
+metadata:
+  name: grpc-spring-boot-demo-server
+spec:
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        app: grpc-spring-boot-demo-server
+    spec:
+      containers:
+        - image: marknazareno/grpc-spring-boot-demo-server
+          imagePullPolicy: Always
+          name: grpc-spring-boot-demo-server
+          ports:
+            - containerPort: 6565
+---
+apiVersion: v1
+kind: Service
+metadata:
+  annotations:
+    konghq.com/protocol: grpc
+  name: grpc-spring-boot-demo-server
+spec:
+  ports:
+    - name: grpc
+      port: 6565
+      targetPort: 6565
+  selector:
+    app: grpc-spring-boot-demo-server
+---
+apiVersion: extensions/v1beta1
+kind: Ingress
+metadata:
+  annotations:
+    konghq.com/protocols: grpc,grpcs
+    kubernetes.io/tls-acme: "true"
+    cert-manager.io/cluster-issuer: letsencrypt-prod
+  name: grpc-spring-boot-demo-server
+spec:
+  tls:
+    - secretName: demo-domain-com
+      hosts:
+        - demo.domain.com
+  rules:
+    - host: demo.domain.com
+      http:
+        paths:
+          - path: /
+            backend:
+              serviceName: grpc-spring-boot-demo-server
+              servicePort: 6565

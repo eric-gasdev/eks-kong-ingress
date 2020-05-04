@@ -4,7 +4,7 @@ kind: ClusterConfig
 metadata:
   name: spot-autoscale
   region: eu-west-1
-
+  version: "1.15"
 nodeGroups:
   - name: ng-spot-autoscale
     desiredCapacity: 1
@@ -17,6 +17,7 @@ nodeGroups:
     iam:
       withAddonPolicies:
         autoScaler: true
+        certManager: true
     labels:
       instance-type: spot
     ssh:
