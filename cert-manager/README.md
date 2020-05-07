@@ -53,7 +53,7 @@ Open the cluster-issuer.yaml and add your email address
 
 Install:
 ```bash
-kubectl apply --validate=false -f https://github.com/jetstack/cert-manager/releases/download/v0.14.3/cert-manager.yaml
+kubectl apply cluster-issuer.yaml
 ```
 
 ## Setup DNS Records
