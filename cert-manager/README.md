@@ -53,7 +53,7 @@ Open the cluster-issuer.yaml and add your email address
 
 Install:
 ```bash
-kubectl apply cluster-issuer.yaml
+kubectl apply -f cluster-issuer.yaml
 ```
 
 ## Setup DNS Records
