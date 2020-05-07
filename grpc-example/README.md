@@ -28,7 +28,7 @@ docker run -it networld/grpcurl sh
 From inside the container:
 ```bash
 $ wget https://raw.githubusercontent.com/marknazareno/grpc-spring-boot-demo/master/grpc-spring-boot-demo-proto/src/main/proto/helloworld.proto
-$ ./grpcurl -v -d '{"name": "from grpCurl"}' -proto helloworld.proto demo.domain.com:443 hello.HelloService.SayHello
+$ ./grpcurl -v -d '{"name": "from grpCurl"}' -proto helloworld.proto demo.domain.com:443 helloworld.Greeter.SayHello
 Resolved method descriptor:
 {
   "name": "SayHello",
